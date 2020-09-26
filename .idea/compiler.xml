@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="transport-serializer" />
+        <module name="my-client-sdk" />
+        <module name="my-client-core" />
+        <module name="transport-core" />
+        <module name="my-common" />
+        <module name="my-broker-server" />
+        <module name="my-transport" />
+        <module name="my-chronos" />
+        <module name="storage-rocksdb" />
+        <module name="my-console" />
+        <module name="my-storage" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
