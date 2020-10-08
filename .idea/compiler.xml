@@ -6,15 +6,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="transport-serializer" />
-        <module name="my-client-sdk" />
-        <module name="my-client-core" />
-        <module name="transport-core" />
+        <module name="my-remoting" />
         <module name="my-common" />
+        <module name="my-client-core" />
+        <module name="remoting-core" />
         <module name="my-broker-server" />
-        <module name="my-transport" />
         <module name="my-chronos" />
+        <module name="my-client-sdk" />
         <module name="storage-rocksdb" />
+        <module name="remoting-serializer" />
         <module name="my-console" />
         <module name="my-storage" />
       </profile>

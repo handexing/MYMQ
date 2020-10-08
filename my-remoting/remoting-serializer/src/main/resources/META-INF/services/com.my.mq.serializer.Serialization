@@ -1,0 +1,2 @@
+com.my.mq.serializer.kryo.KryoSerializer
+com.my.mq.serializer.json.JsonSerializer
