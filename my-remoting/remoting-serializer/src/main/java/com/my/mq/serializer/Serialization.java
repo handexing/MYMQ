@@ -2,17 +2,22 @@ package com.my.mq.serializer;
 
 import com.my.mq.common.spi.Spi;
 
+/**
+ * @author: handx
+ * @description: 序列化接口
+ * @create 2020-10-14 14:22
+ */
 @Spi
 public interface Serialization {
 
     /**
-     * 序列化
+     * 编码
      */
-    byte[] serializer(Object obj) throws Exception;
+    <T> byte[] encode(T obj) throws Exception;
 
     /**
-     * 反序列化
+     * 解码
      */
-    <T> Object deserializer(byte[] bytes, Class<T> clazz) throws Exception;
+    <T> T decode(byte[] bytes, Class<T> clazz) throws Exception;
 
 }

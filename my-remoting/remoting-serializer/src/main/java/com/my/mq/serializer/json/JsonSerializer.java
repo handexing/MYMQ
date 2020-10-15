@@ -17,7 +17,7 @@ public class JsonSerializer implements Serialization {
     private final static Charset CHARSET_UTF8 = Charset.forName("UTF-8");
 
     @Override
-    public byte[] serializer(Object obj) throws Exception {
+    public <T> byte[] encode(T obj) {
         final String json = toJson(obj, false);
         if (json != null) {
             return json.getBytes(CHARSET_UTF8);
@@ -27,7 +27,7 @@ public class JsonSerializer implements Serialization {
 
 
     @Override
-    public <T> Object deserializer(byte[] bytes, Class<T> clazz) throws Exception {
+    public <T> T decode(byte[] bytes, Class<T> clazz) {
         final String json = new String(bytes, CHARSET_UTF8);
         return fromJson(json, clazz);
     }
