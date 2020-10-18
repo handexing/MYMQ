@@ -1,18 +1,16 @@
-
 package com.my.mq.remoting.netty;
 
+import com.my.mq.remoting.InvokeCallback;
 import com.my.mq.remoting.common.SemaphoreReleaseOnlyOnce;
 import com.my.mq.remoting.protocol.RemotingCommand;
-import com.my.mq.remoting.remoting.InvokeCallback;
 import io.netty.channel.Channel;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ResponseFuture {
 
-    private final String requestId;
+    private final int requestId;
     private final Channel processChannel;
     private final long timeoutMillis;
     private final InvokeCallback invokeCallback;
@@ -26,8 +24,8 @@ public class ResponseFuture {
     private volatile boolean sendRequestOK = true;
     private volatile Throwable cause;
 
-    public ResponseFuture(Channel channel, String requestId, long timeoutMillis, InvokeCallback invokeCallback,
-                          SemaphoreReleaseOnlyOnce once) {
+    public ResponseFuture(Channel channel, int requestId, long timeoutMillis, InvokeCallback invokeCallback,
+        SemaphoreReleaseOnlyOnce once) {
         this.requestId = requestId;
         this.processChannel = channel;
         this.timeoutMillis = timeoutMillis;
@@ -100,7 +98,7 @@ public class ResponseFuture {
         this.responseCommand = responseCommand;
     }
 
-    public String getRequestId() {
+    public int getRequestId() {
         return requestId;
     }
 

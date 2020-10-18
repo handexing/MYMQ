@@ -1,7 +1,5 @@
 package com.my.mq.remoting.netty;
 
-import com.my.mq.common.consts.MqConstants;
-
 public class NettyServerConfig implements Cloneable {
     private int listenPort = 8888;
     private int serverWorkerThreads = 8;
@@ -11,8 +9,8 @@ public class NettyServerConfig implements Cloneable {
     private int serverAsyncSemaphoreValue = 64;
     private int serverChannelMaxIdleTimeSeconds = 120;
 
-    private int serverSocketSndBufSize = MqConstants.socketSndbufSize;
-    private int serverSocketRcvBufSize = MqConstants.socketRcvbufSize;
+    private int serverSocketSndBufSize = NettySystemConfig.socketSndbufSize;
+    private int serverSocketRcvBufSize = NettySystemConfig.socketRcvbufSize;
     private boolean serverPooledByteBufAllocatorEnable = true;
 
     /**

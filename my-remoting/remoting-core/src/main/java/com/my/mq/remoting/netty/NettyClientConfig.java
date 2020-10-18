@@ -1,15 +1,13 @@
 package com.my.mq.remoting.netty;
 
-import com.my.mq.common.consts.MqConstants;
-
 public class NettyClientConfig {
     /**
      * Worker thread number
      */
     private int clientWorkerThreads = 4;
     private int clientCallbackExecutorThreads = Runtime.getRuntime().availableProcessors();
-    private int clientOnewaySemaphoreValue = MqConstants.CLIENT_ONEWAY_SEMAPHORE_VALUE;
-    private int clientAsyncSemaphoreValue = MqConstants.CLIENT_ASYNC_SEMAPHORE_VALUE;
+    private int clientOnewaySemaphoreValue = NettySystemConfig.CLIENT_ONEWAY_SEMAPHORE_VALUE;
+    private int clientAsyncSemaphoreValue = NettySystemConfig.CLIENT_ASYNC_SEMAPHORE_VALUE;
     private int connectTimeoutMillis = 3000;
     private long channelNotActiveInterval = 1000 * 60;
 
@@ -19,12 +17,10 @@ public class NettyClientConfig {
      */
     private int clientChannelMaxIdleTimeSeconds = 120;
 
-    private int clientSocketSndBufSize = MqConstants.socketSndbufSize;
-    private int clientSocketRcvBufSize = MqConstants.socketRcvbufSize;
+    private int clientSocketSndBufSize = NettySystemConfig.socketSndbufSize;
+    private int clientSocketRcvBufSize = NettySystemConfig.socketRcvbufSize;
     private boolean clientPooledByteBufAllocatorEnable = false;
     private boolean clientCloseSocketIfTimeout = false;
-
-    private boolean useTLS;
 
     public boolean isClientCloseSocketIfTimeout() {
         return clientCloseSocketIfTimeout;
@@ -114,11 +110,4 @@ public class NettyClientConfig {
         this.clientPooledByteBufAllocatorEnable = clientPooledByteBufAllocatorEnable;
     }
 
-    public boolean isUseTLS() {
-        return useTLS;
-    }
-
-    public void setUseTLS(boolean useTLS) {
-        this.useTLS = useTLS;
-    }
 }

@@ -2,12 +2,11 @@ package com.my.mq.storagge.rockdsdb.db;
 
 
 import com.google.common.base.Charsets;
-import org.apache.rocketmq.remoting.storage.FileIOUtils;
+import com.my.mq.storagge.rockdsdb.utils.FileIOUtils;
 import org.rocksdb.*;
-
 import java.io.File;
 
-import static org.apache.rocketmq.remoting.storage.db.CFManager.*;
+import static com.my.mq.storagge.rockdsdb.db.CFManager.*;
 
 
 public class RDB {

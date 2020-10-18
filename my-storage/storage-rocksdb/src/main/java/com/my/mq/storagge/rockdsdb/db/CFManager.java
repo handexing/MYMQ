@@ -1,7 +1,7 @@
 package com.my.mq.storagge.rockdsdb.db;
 
 import com.google.common.base.Charsets;
-import org.apache.rocketmq.remoting.storage.enums.CFHandlerNames;
+import com.my.mq.storagge.rockdsdb.enums.CFHandlerNames;
 import org.rocksdb.ColumnFamilyDescriptor;
 import org.rocksdb.ColumnFamilyHandle;
 

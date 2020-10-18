@@ -1,6 +1,7 @@
 package com.my.mq.serializer.json;
 
 import com.alibaba.fastjson.JSON;
+import com.my.mq.common.spi.SpiMeta;
 import com.my.mq.serializer.Serialization;
 
 import java.nio.charset.Charset;
@@ -12,6 +13,7 @@ import java.nio.charset.Charset;
  * @Description json序列化
  * @createTime 2020年10月07日 21:52:00
  */
+@SpiMeta(name = "json")
 public class JsonSerializer implements Serialization {
 
     private final static Charset CHARSET_UTF8 = Charset.forName("UTF-8");
