@@ -25,8 +25,8 @@ public class CFManager {
         cfhDefault = CF_HANDLES.get(CFHandlerNames.DEFAULT.ordinal());
     }
 
-    public static ColumnFamilyHandle getColumnFamilyHandle() {
-        return cfhDefault;
+    public static ColumnFamilyHandle getColumnFamilyHandle(CFHandlerNames cfHandlerNames) {
+        return  cfhDefault = CF_HANDLES.get(cfHandlerNames.ordinal());
     }
 
 

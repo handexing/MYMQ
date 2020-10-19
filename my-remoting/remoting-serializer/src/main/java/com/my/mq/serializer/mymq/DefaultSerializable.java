@@ -1,5 +1,9 @@
 package com.my.mq.serializer.mymq;
 
+import com.my.mq.remoting.enums.LanguageType;
+import com.my.mq.remoting.enums.RemotingCommandType;
+import com.my.mq.remoting.enums.SerializeType;
+import com.my.mq.remoting.protocol.RemotingCommand;
 import com.my.mq.serializer.Serialization;
 
 import java.nio.ByteBuffer;
@@ -13,7 +17,7 @@ import java.util.Map;
  * @description: mymq序列化
  * @create 2020-10-14 14:22
  */
-public class MymqSerializable implements Serialization {
+public class DefaultSerializable implements Serialization {
 
     private static final Charset CHARSET_UTF8 = Charset.forName("UTF-8");
 
@@ -40,7 +44,7 @@ public class MymqSerializable implements Serialization {
         // int code(~32767)
         headerBuffer.putShort((short) cmd.getCode());
         // LanguageCode language
-        headerBuffer.put(cmd.getLanguage().getCode());
+        headerBuffer.put(cmd.getLanguage().getType());
         // int version(~32767)
         headerBuffer.putShort((short) cmd.getVersion());
         // int requestId
@@ -127,39 +131,6 @@ public class MymqSerializable implements Serialization {
         return length;
     }
 
-    public static RemotingCommand rocketMQProtocolDecode(final byte[] headerArray) {
-        RemotingCommand cmd = new RemotingCommand();
-        ByteBuffer headerBuffer = ByteBuffer.wrap(headerArray);
-        // int code(~32767)
-        cmd.setCode(headerBuffer.getShort());
-        // LanguageCode language
-        cmd.setLanguage(LanguageCode.valueOf(headerBuffer.get()));
-        // int version(~32767)
-        cmd.setVersion(headerBuffer.getShort());
-        // int requestId
-        cmd.setRequestId(headerBuffer.getInt());
-        // int flag
-//        cmd.setFlag(headerBuffer.getInt());
-        // String remark
-        int remarkLength = headerBuffer.getInt();
-        if (remarkLength > 0) {
-            byte[] remarkContent = new byte[remarkLength];
-            headerBuffer.get(remarkContent);
-            cmd.setRemark(new String(remarkContent, CHARSET_UTF8));
-        }
-
-        // HashMap<String, String> extFields
-        int extFieldsLength = headerBuffer.getInt();
-        if (extFieldsLength > 0) {
-            byte[] extFieldsBytes = new byte[extFieldsLength];
-            headerBuffer.get(extFieldsBytes);
-            cmd.setExtFields(mapDeserialize(extFieldsBytes));
-        }
-        cmd.setSerializeType(SerializeType.valueOf(headerBuffer.get()));
-        cmd.setRemotingCommandType(RemotingCommandType.getByType(headerBuffer.get()));
-        return cmd;
-    }
-
     public static HashMap<String, String> mapDeserialize(byte[] bytes) {
         if (bytes == null || bytes.length <= 0)
             return null;
@@ -200,11 +171,79 @@ public class MymqSerializable implements Serialization {
 
     @Override
     public <T> byte[] encode(T obj) throws Exception {
-        return new byte[0];
+        // String remark
+        byte[] remarkBytes = null;
+        int remarkLen = 0;
+        RemotingCommand cmd = (RemotingCommand) obj;
+        if (cmd.getRemark() != null && cmd.getRemark().length() > 0) {
+            remarkBytes = cmd.getRemark().getBytes(CHARSET_UTF8);
+            remarkLen = remarkBytes.length;
+        }
+
+        // HashMap<String, String> extFields
+        byte[] extFieldsBytes = null;
+        int extLen = 0;
+        if (cmd.getExtFields() != null && !cmd.getExtFields().isEmpty()) {
+            extFieldsBytes = mapSerialize(cmd.getExtFields());
+            extLen = extFieldsBytes.length;
+        }
+
+        int totalLen = calTotalLen(remarkLen, extLen);
+
+        ByteBuffer headerBuffer = ByteBuffer.allocate(totalLen);
+        // int code(~32767)
+        headerBuffer.putShort((short) cmd.getCode());
+        // LanguageCode language
+        headerBuffer.put(cmd.getLanguage().getType());
+        // int version(~32767)
+        headerBuffer.putShort((short) cmd.getVersion());
+        // int requestId
+        headerBuffer.putInt(cmd.getRequestId());
+        // String remark
+        if (remarkBytes != null) {
+            headerBuffer.putInt(remarkBytes.length);
+            headerBuffer.put(remarkBytes);
+        } else {
+            headerBuffer.putInt(0);
+        }
+        // HashMap<String, String> extFields;
+        if (extFieldsBytes != null) {
+            headerBuffer.putInt(extFieldsBytes.length);
+            headerBuffer.put(extFieldsBytes);
+        } else {
+            headerBuffer.putInt(0);
+        }
+        headerBuffer.put(cmd.getRemotingCommandType().getType());
+        headerBuffer.put(cmd.getRemotingCommandType().getType());
+
+        return headerBuffer.array();
     }
 
     @Override
     public <T> T decode(byte[] bytes, Class<T> clazz) throws Exception {
-        return null;
+        ByteBuffer headerBuffer = ByteBuffer.wrap(bytes);
+        RemotingCommand command = RemotingCommand.builder().code(headerBuffer.getShort())
+                .LanguageType(LanguageType.getByType(headerBuffer.get()))
+                .serializeType(SerializeType.getByType(headerBuffer.get()))
+                .remotingCommandType(RemotingCommandType.getByType(headerBuffer.get()))
+                .version(headerBuffer.getShort())
+                .requestId(headerBuffer.getInt()).build();
+
+        // String remark
+        int remarkLength = headerBuffer.getInt();
+        if (remarkLength > 0) {
+            byte[] remarkContent = new byte[remarkLength];
+            headerBuffer.get(remarkContent);
+            command.setRemark(new String(remarkContent, CHARSET_UTF8));
+        }
+
+        // HashMap<String, String> extFields
+        int extFieldsLength = headerBuffer.getInt();
+        if (extFieldsLength > 0) {
+            byte[] extFieldsBytes = new byte[extFieldsLength];
+            headerBuffer.get(extFieldsBytes);
+            command.setExtFields(mapDeserialize(extFieldsBytes));
+        }
+        return (T) command;
     }
 }

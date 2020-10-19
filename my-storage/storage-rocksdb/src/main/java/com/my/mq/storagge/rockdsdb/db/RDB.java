@@ -27,7 +27,7 @@ public class RDB {
             DB = RocksDB.open(OptionsConfig.DB_OPTIONS, dbPath, CF_DESCRIPTORS, CF_HANDLES);
             assert (DB != null);
 
-            initCFManger(CF_HANDLES);
+//            initCFManger(CF_HANDLES);
         } catch (RocksDBException e) {
 //            LOGGER.error("error while open rocksdb, path:{}, err:{}", dbPath, e.getMessage(), e);
         }

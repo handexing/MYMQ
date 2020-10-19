@@ -1,7 +1,7 @@
 package com.my.mq.remoting.netty;
 
+import com.my.mq.remoting.common.RemotingHelper;
 import com.my.mq.remoting.common.RemotingUtil;
-import com.my.mq.remoting.protocol.RemotingCommand;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -28,7 +28,7 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
 
             ByteBuffer byteBuffer = frame.nioBuffer();
 
-            return RemotingCommand.decode(byteBuffer);
+            return RemotingHelper.decode(byteBuffer);
         } catch (Exception e) {
 //            log.error("decode exception, " + RemotingHelper.parseChannelRemoteAddr(ctx.channel()), e);
             RemotingUtil.closeChannel(ctx.channel());

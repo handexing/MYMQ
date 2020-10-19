@@ -1,2 +1,3 @@
-com.my.mq.serializer.kryo.KryoSerializer
 com.my.mq.serializer.json.JsonSerializer
+com.my.mq.serializer.mymq.DefaultSerializable
+com.my.mq.serializer.protostuff.ProtostuffSerializable

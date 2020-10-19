@@ -14,6 +14,7 @@
     <modules>
         <module>remoting-core</module>
         <module>remoting-serializer</module>
+        <module>remoting-common</module>
     </modules>
 
     <dependencies>
