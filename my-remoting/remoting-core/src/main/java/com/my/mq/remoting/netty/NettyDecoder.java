@@ -1,7 +1,8 @@
 package com.my.mq.remoting.netty;
 
-import com.my.mq.remoting.common.RemotingHelper;
 import com.my.mq.remoting.common.RemotingUtil;
+import com.my.mq.remoting.enums.SerializeType;
+import com.my.mq.remoting.protocol.RemotingCommand;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -25,10 +26,8 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
             if (null == frame) {
                 return null;
             }
-
             ByteBuffer byteBuffer = frame.nioBuffer();
-
-            return RemotingHelper.decode(byteBuffer);
+            return decode(byteBuffer);
         } catch (Exception e) {
 //            log.error("decode exception, " + RemotingHelper.parseChannelRemoteAddr(ctx.channel()), e);
             RemotingUtil.closeChannel(ctx.channel());
@@ -37,7 +36,59 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
                 frame.release();
             }
         }
-
         return null;
+    }
+
+    public static RemotingCommand decode(final byte[] array) {
+        ByteBuffer byteBuffer = ByteBuffer.wrap(array);
+        return decode(byteBuffer);
+    }
+
+    public static RemotingCommand decode(final ByteBuffer byteBuffer) {
+        int length = byteBuffer.limit();
+        int oriHeaderLen = byteBuffer.getInt();
+        int headerLength = getHeaderLength(oriHeaderLen);
+
+        byte[] headerData = new byte[headerLength];
+        byteBuffer.get(headerData);
+
+        RemotingCommand cmd = headerDecode(headerData, getProtocolType(oriHeaderLen));
+
+        int bodyLength = length - 4 - headerLength;
+        byte[] bodyData = null;
+        if (bodyLength > 0) {
+            bodyData = new byte[bodyLength];
+            byteBuffer.get(bodyData);
+        }
+        cmd.setBody(bodyData);
+        return cmd;
+    }
+
+    public static int getHeaderLength(int length) {
+        return length & 0xFFFFFF;
+    }
+
+    private static RemotingCommand headerDecode(byte[] headerData, SerializeType type) {
+        switch (type) {
+            case JSON:
+                RemotingCommand resultJson = RemotingSerializable.decode(headerData, RemotingCommand.class);
+                resultJson.setSerializeType(type);
+                return resultJson;
+            case MYMQ:
+                RemotingCommand resultRMQ = MyMQSerializable.rocketMQProtocolDecode(headerData);
+                resultRMQ.setSerializeType(type);
+                return resultRMQ;
+            case PROTOSTUFF:
+                RemotingCommand resultKryo = ProtostuffSerializable.decode(headerData, RemotingCommand.class);
+                resultKryo.setSerializeType(type);
+                return resultKryo;
+            default:
+                break;
+        }
+        return null;
+    }
+
+    public static SerializeType getProtocolType(int source) {
+        return SerializeType.getByType((byte) ((source >> 24) & 0xFF));
     }
 }

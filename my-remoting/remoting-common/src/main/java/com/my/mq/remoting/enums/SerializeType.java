@@ -2,14 +2,16 @@ package com.my.mq.remoting.enums;
 
 public enum SerializeType {
 
-    JSON((byte) 0),
-    MYMQ((byte) 1),
-    PROTOSTUFF((byte) 2);
+    JSON((byte) 0,"json"),
+    MYMQ((byte) 1,"mymq"),
+    PROTOSTUFF((byte) 2,"protostuff");
 
     private byte code;
+    private String name;
 
-    SerializeType(byte code) {
+    SerializeType(byte code,String name) {
         this.code = code;
+        this.name = name;
     }
 
     public static SerializeType getByType(byte code) {
@@ -24,4 +26,9 @@ public enum SerializeType {
     public byte getCode() {
         return code;
     }
+
+    public String getName() {
+        return name;
+    }
+
 }

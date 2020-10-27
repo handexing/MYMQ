@@ -44,7 +44,7 @@ public class RemotingHelper {
         return isa;
     }
 
-    public static RemotingCommand invokeSync(final String addr, final RemotingCommand request,
+    /*public static RemotingCommand invokeSync(final String addr, final RemotingCommand request,
                                              final long timeoutMillis) throws InterruptedException, RemotingConnectException,
             RemotingSendRequestException, RemotingTimeoutException {
         long beginTime = System.currentTimeMillis();
@@ -134,7 +134,7 @@ public class RemotingHelper {
         } else {
             throw new RemotingConnectException(addr);
         }
-    }
+    }*/
 
     public static String parseChannelRemoteAddr(final Channel channel) {
         if (null == channel) {
