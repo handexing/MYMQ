@@ -11,10 +11,14 @@ import io.netty.channel.ChannelHandlerContext;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
 
 public class RemotingServerTest {
+
+    private static Logger logger = LoggerFactory.getLogger(RemotingServerTest.class);
 
     private static RemotingServer remotingServer;
     private static RemotingClient remotingClient;
@@ -83,7 +87,7 @@ public class RemotingServerTest {
                     .addExtFields("age", "20").build();
             long start = System.currentTimeMillis();
             RemotingCommand response = remotingClient.invokeSync("localhost:8888", request, 1000 * 3);
-            System.out.println(response.toString() + "::" + (System.currentTimeMillis() - start));
+            logger.info(response.toString() + "::" + (System.currentTimeMillis() - start));
         }
     }
 

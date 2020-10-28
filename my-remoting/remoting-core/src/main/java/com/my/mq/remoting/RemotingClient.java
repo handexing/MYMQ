@@ -10,6 +10,9 @@ import com.my.mq.remoting.protocol.RemotingCommand;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
+/**
+ *
+ */
 public interface RemotingClient extends RemotingService {
 
     void updateNameServerAddressList(final List<String> addrs);

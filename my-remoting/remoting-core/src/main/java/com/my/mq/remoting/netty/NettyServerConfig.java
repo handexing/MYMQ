@@ -1,6 +1,9 @@
 package com.my.mq.remoting.netty;
 
+import com.my.mq.common.consts.MqConstants;
+
 public class NettyServerConfig implements Cloneable {
+
     private int listenPort = 8888;
     private int serverWorkerThreads = 8;
     private int serverCallbackExecutorThreads = 0;
@@ -9,17 +12,10 @@ public class NettyServerConfig implements Cloneable {
     private int serverAsyncSemaphoreValue = 64;
     private int serverChannelMaxIdleTimeSeconds = 120;
 
-    private int serverSocketSndBufSize = NettySystemConfig.socketSndbufSize;
-    private int serverSocketRcvBufSize = NettySystemConfig.socketRcvbufSize;
+    private int serverSocketSndBufSize = MqConstants.socketSndbufSize;
+    private int serverSocketRcvBufSize = MqConstants.socketRcvbufSize;
     private boolean serverPooledByteBufAllocatorEnable = true;
 
-    /**
-     * make make install
-     *
-     *
-     * ../glibc-2.10.1/configure \ --prefix=/usr \ --with-headers=/usr/include \
-     * --host=x86_64-linux-gnu \ --build=x86_64-pc-linux-gnu \ --without-gd
-     */
     private boolean useEpollNativeSelector = false;
 
     public int getListenPort() {

@@ -3,6 +3,13 @@ package com.my.mq.remoting.enums;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author handx
+ * @version 1.0.0
+ * @ClassName RemotingCommandType.java
+ * @Description 请求类型
+ * @createTime 2020年10月28日 22:45:00
+ */
 public enum RemotingCommandType {
 
     REQUEST_COMMAND((byte)1, "请求"),

@@ -1,6 +1,7 @@
 package com.my.mq.remoting.netty;
 
 import com.my.mq.common.spi.ExtensionLoader;
+import com.my.mq.remoting.common.RemotingHelper;
 import com.my.mq.remoting.common.RemotingUtil;
 import com.my.mq.remoting.enums.SerializeType;
 import com.my.mq.remoting.protocol.RemotingCommand;
@@ -9,12 +10,15 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 
 @ChannelHandler.Sharable
 public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
 
+    private static Logger log = LoggerFactory.getLogger(NettyEncoder.class);
 
     @Override
     public void encode(ChannelHandlerContext ctx, RemotingCommand remotingCommand, ByteBuf out) {
@@ -26,9 +30,9 @@ public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
                 out.writeBytes(body);
             }
         } catch (Exception e) {
-//            log.error("encode exception, " + RemotingHelper.parseChannelRemoteAddr(ctx.channel()), e);
+            log.error("encode exception, " + RemotingHelper.parseChannelRemoteAddr(ctx.channel()), e);
             if (remotingCommand != null) {
-//                log.error(remotingCommand.toString());
+                log.error(remotingCommand.toString());
             }
             RemotingUtil.closeChannel(ctx.channel());
         }
@@ -70,17 +74,6 @@ public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
     private byte[] headerEncode(RemotingCommand remotingCommand) throws Exception {
         Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getExtension(remotingCommand.getSerializeType().getName());
         return serialization.encode(remotingCommand);
-       /* switch (remotingCommand.getSerializeType()) {
-            case JSON:
-                return serialization.encode(remotingCommand);
-            case MYMQ:
-                return serialization.encode(remotingCommand);
-            case PROTOSTUFF:
-                return serialization.encode(remotingCommand);
-            default:
-                break;
-        }
-        return null;*/
     }
 
     public static byte[] markProtocolType(int source, SerializeType type) {
@@ -92,39 +85,5 @@ public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
         result[3] = (byte) (source & 0xFF);
         return result;
     }
-
-    /*public ByteBuffer encode() {
-        // 1> header length size
-        int length = 4;
-
-        // 2> header data length
-        byte[] headerData = this.headerEncode();
-        length += headerData.length;
-
-        // 3> body data length
-        if (this.body != null) {
-            length += body.length;
-        }
-
-        ByteBuffer result = ByteBuffer.allocate(4 + length);
-
-        // length
-        result.putInt(length);
-
-        // header length
-        result.put(markProtocolType(headerData.length, serializeType));
-
-        // header data
-        result.put(headerData);
-
-        // body data;
-        if (this.body != null) {
-            result.put(this.body);
-        }
-
-        result.flip();
-
-        return result;
-    }*/
 
 }

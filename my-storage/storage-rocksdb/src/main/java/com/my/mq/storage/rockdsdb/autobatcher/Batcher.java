@@ -4,12 +4,17 @@ import com.my.mq.storage.rockdsdb.db.RDB;
 import org.rocksdb.ColumnFamilyHandle;
 import org.rocksdb.RocksDBException;
 import org.rocksdb.WriteBatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 
 public class Batcher {
+
+    private static Logger log = LoggerFactory.getLogger(Batcher.class);
+
 
     private static final int PULL_BATCH_ITEM_NUM = 50;
 
@@ -40,7 +45,7 @@ public class Batcher {
             if (itemNum > 0) {
                 // make sure write succ
                 while (!RDB.writeSync(wb)) {
-//                    LOGGER.error("error while flush to db!");
+                    log.error("error while flush to db!");
                     try {
                         TimeUnit.MILLISECONDS.sleep(200);
                     } catch (InterruptedException e) {

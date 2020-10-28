@@ -1,5 +1,12 @@
 package com.my.mq.remoting.enums;
 
+/**
+ * @author handx
+ * @version 1.0.0
+ * @ClassName LanguageType.java
+ * @Description 支持的语言
+ * @createTime 2020年10月28日 22:45:00
+ */
 public enum LanguageType {
 
     JAVA((byte) 0),

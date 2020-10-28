@@ -8,6 +8,13 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @author handx
+ * @version 1.0.0
+ * @ClassName RemotingCommand.java
+ * @Description 通信协议
+ * @createTime 2020年10月28日 22:45:00
+ */
 public class RemotingCommand {
 
     public static final String TRACE_ID = "traceId";

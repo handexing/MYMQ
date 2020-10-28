@@ -1,24 +1,26 @@
 package com.my.mq.remoting.netty;
 
+import com.my.mq.common.consts.MqConstants;
+
 public class NettyClientConfig {
+
     /**
-     * Worker thread number
+     * 工作线程数量
      */
     private int clientWorkerThreads = 4;
     private int clientCallbackExecutorThreads = Runtime.getRuntime().availableProcessors();
-    private int clientOnewaySemaphoreValue = NettySystemConfig.CLIENT_ONEWAY_SEMAPHORE_VALUE;
-    private int clientAsyncSemaphoreValue = NettySystemConfig.CLIENT_ASYNC_SEMAPHORE_VALUE;
+    private int clientOnewaySemaphoreValue = MqConstants.CLIENT_ONEWAY_SEMAPHORE_VALUE;
+    private int clientAsyncSemaphoreValue = MqConstants.CLIENT_ASYNC_SEMAPHORE_VALUE;
     private int connectTimeoutMillis = 3000;
     private long channelNotActiveInterval = 1000 * 60;
 
     /**
-     * IdleStateEvent will be triggered when neither read nor write was performed for
-     * the specified period of this time. Specify {@code 0} to disable
+     * channel最大空闲时间
      */
     private int clientChannelMaxIdleTimeSeconds = 120;
 
-    private int clientSocketSndBufSize = NettySystemConfig.socketSndbufSize;
-    private int clientSocketRcvBufSize = NettySystemConfig.socketRcvbufSize;
+    private int clientSocketSndBufSize = MqConstants.socketSndbufSize;
+    private int clientSocketRcvBufSize = MqConstants.socketRcvbufSize;
     private boolean clientPooledByteBufAllocatorEnable = false;
     private boolean clientCloseSocketIfTimeout = false;
 
