@@ -1,7 +1,7 @@
-package com.my.mq.storagge.rockdsdb.db;
+package com.my.mq.storage.rockdsdb.db;
 
 import com.google.common.base.Charsets;
-import com.my.mq.storagge.rockdsdb.enums.CFHandlerNames;
+import com.my.mq.storage.rockdsdb.enums.CFHandlerNames;
 import org.rocksdb.ColumnFamilyDescriptor;
 import org.rocksdb.ColumnFamilyHandle;
 
@@ -19,14 +19,16 @@ public class CFManager {
     static {
         CF_DESCRIPTORS.add(new ColumnFamilyDescriptor(CFHandlerNames.DEFAULT.getName().getBytes(Charsets.UTF_8),
                 OptionsConfig.COLUMN_FAMILY_OPTIONS_DEFAULT));
+        CF_DESCRIPTORS.add(new ColumnFamilyDescriptor(CFHandlerNames.META.getName().getBytes(Charsets.UTF_8),
+                OptionsConfig.COLUMN_FAMILY_OPTIONS_DEFAULT));
     }
 
-    static void initCFManger(final List<ColumnFamilyHandle> cfHandles) {
-        cfhDefault = CF_HANDLES.get(CFHandlerNames.DEFAULT.ordinal());
-    }
+//    static void initCFManger() {
+//        cfhDefault = CF_HANDLES.get(CFHandlerNames.DEFAULT.ordinal());
+//    }
 
-    public static ColumnFamilyHandle getColumnFamilyHandle(CFHandlerNames cfHandlerNames) {
-        return  cfhDefault = CF_HANDLES.get(cfHandlerNames.ordinal());
+    public static ColumnFamilyHandle getColumnFamilyHandle(CFHandlerNames type) {
+        return  cfhDefault = CF_HANDLES.get(type.ordinal());
     }
 
 

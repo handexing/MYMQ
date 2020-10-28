@@ -4,6 +4,7 @@ import com.my.mq.common.spi.ExtensionLoader;
 import com.my.mq.remoting.common.RemotingUtil;
 import com.my.mq.remoting.enums.SerializeType;
 import com.my.mq.remoting.protocol.RemotingCommand;
+import com.my.mq.serializer.Serialization;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -14,8 +15,9 @@ import java.nio.ByteBuffer;
 @ChannelHandler.Sharable
 public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
 
+
     @Override
-    public void encode(ChannelHandlerContext ctx, RemotingCommand remotingCommand, ByteBuf out){
+    public void encode(ChannelHandlerContext ctx, RemotingCommand remotingCommand, ByteBuf out) {
         try {
             ByteBuffer header = encodeHeader(remotingCommand);
             out.writeBytes(header);
@@ -32,17 +34,17 @@ public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
         }
     }
 
-    public ByteBuffer encodeHeader(RemotingCommand remotingCommand) {
-        return encodeHeader(remotingCommand.getBody() != null ? remotingCommand.getBody().length : 0,remotingCommand.getSerializeType());
+    public ByteBuffer encodeHeader(RemotingCommand remotingCommand) throws Exception {
+        return encodeHeader(remotingCommand.getBody() != null ? remotingCommand.getBody().length : 0, remotingCommand);
     }
 
-    public ByteBuffer encodeHeader(final int bodyLength,final SerializeType serializeType) {
+    public ByteBuffer encodeHeader(final int bodyLength, final RemotingCommand remotingCommand) throws Exception {
         // 1> header length size
         int length = 4;
 
         // 2> header data length
         byte[] headerData;
-        headerData = this.headerEncode(serializeType);
+        headerData = this.headerEncode(remotingCommand);
 
         length += headerData.length;
 
@@ -55,7 +57,7 @@ public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
         result.putInt(length);
 
         // header length
-        result.put(markProtocolType(headerData.length, serializeType));
+        result.put(markProtocolType(headerData.length, remotingCommand.getSerializeType()));
 
         // header data
         result.put(headerData);
@@ -65,19 +67,20 @@ public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
         return result;
     }
 
-    private byte[] headerEncode(SerializeType serializeType) {
-        ExtensionLoader.getExtensionLoader(Serialization).getSpiName(serializeType.getName());
-        switch (serializeType) {
+    private byte[] headerEncode(RemotingCommand remotingCommand) throws Exception {
+        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getExtension(remotingCommand.getSerializeType().getName());
+        return serialization.encode(remotingCommand);
+       /* switch (remotingCommand.getSerializeType()) {
             case JSON:
-                return RemotingSerializable.encode(this);
+                return serialization.encode(remotingCommand);
             case MYMQ:
-                return MyMQSerializable.rocketMQProtocolEncode(this);
+                return serialization.encode(remotingCommand);
             case PROTOSTUFF:
-                return ProtostuffSerializable.encode(this);
+                return serialization.encode(remotingCommand);
             default:
                 break;
         }
-        return null;
+        return null;*/
     }
 
     public static byte[] markProtocolType(int source, SerializeType type) {

@@ -1,8 +1,10 @@
 package com.my.mq.remoting.netty;
 
+import com.my.mq.common.spi.ExtensionLoader;
 import com.my.mq.remoting.common.RemotingUtil;
 import com.my.mq.remoting.enums.SerializeType;
 import com.my.mq.remoting.protocol.RemotingCommand;
+import com.my.mq.serializer.Serialization;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -39,12 +41,12 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
         return null;
     }
 
-    public static RemotingCommand decode(final byte[] array) {
+    public static RemotingCommand decode(final byte[] array) throws Exception {
         ByteBuffer byteBuffer = ByteBuffer.wrap(array);
         return decode(byteBuffer);
     }
 
-    public static RemotingCommand decode(final ByteBuffer byteBuffer) {
+    public static RemotingCommand decode(final ByteBuffer byteBuffer) throws Exception {
         int length = byteBuffer.limit();
         int oriHeaderLen = byteBuffer.getInt();
         int headerLength = getHeaderLength(oriHeaderLen);
@@ -68,8 +70,12 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
         return length & 0xFFFFFF;
     }
 
-    private static RemotingCommand headerDecode(byte[] headerData, SerializeType type) {
-        switch (type) {
+    private static RemotingCommand headerDecode(byte[] headerData, SerializeType type) throws Exception {
+        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getExtension(type.getName());
+        RemotingCommand cmd = serialization.decode(headerData, RemotingCommand.class);
+        cmd.setSerializeType(type);
+        return cmd;
+        /*switch (type) {
             case JSON:
                 RemotingCommand resultJson = RemotingSerializable.decode(headerData, RemotingCommand.class);
                 resultJson.setSerializeType(type);
@@ -85,7 +91,7 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
             default:
                 break;
         }
-        return null;
+        return null;*/
     }
 
     public static SerializeType getProtocolType(int source) {

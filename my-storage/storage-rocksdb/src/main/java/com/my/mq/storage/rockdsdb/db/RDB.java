@@ -1,12 +1,11 @@
-package com.my.mq.storagge.rockdsdb.db;
+package com.my.mq.storage.rockdsdb.db;
 
 
 import com.google.common.base.Charsets;
-import com.my.mq.storagge.rockdsdb.utils.FileIOUtils;
+import com.my.mq.storage.rockdsdb.autobatcher.Batcher;
+import com.my.mq.storage.rockdsdb.utils.FileIOUtils;
 import org.rocksdb.*;
 import java.io.File;
-
-import static com.my.mq.storagge.rockdsdb.db.CFManager.*;
 
 
 public class RDB {
@@ -24,7 +23,7 @@ public class RDB {
             result = FileIOUtils.createOrExistsDir(new File("F:\\storage\\rocksdb_restore"));
             assert(result != false);
 
-            DB = RocksDB.open(OptionsConfig.DB_OPTIONS, dbPath, CF_DESCRIPTORS, CF_HANDLES);
+            DB = RocksDB.open(OptionsConfig.DB_OPTIONS, dbPath, CFManager.CF_DESCRIPTORS, CFManager.CF_HANDLES);
             assert (DB != null);
 
 //            initCFManger(CF_HANDLES);
@@ -139,13 +138,13 @@ public class RDB {
     }
 
     public static void close() {
-//        Batcher.getInstance().close();
+        Batcher.getInstance().close();
         OptionsConfig.DB_OPTIONS.close();
         OptionsConfig.WRITE_OPTIONS_SYNC.close();
         OptionsConfig.WRITE_OPTIONS_ASYNC.close();
         OptionsConfig.READ_OPTIONS.close();
         OptionsConfig.COLUMN_FAMILY_OPTIONS_DEFAULT.close();
-        CF_HANDLES.forEach(AbstractImmutableNativeReference::close);
+        CFManager.CF_HANDLES.forEach(AbstractImmutableNativeReference::close);
         if (DB != null) {
             DB.close();
         }

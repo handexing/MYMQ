@@ -1,4 +1,4 @@
-package com.my.mq.storagge.rockdsdb.utils;
+package com.my.mq.storage.rockdsdb.utils;
 
 import java.io.*;
 

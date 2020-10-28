@@ -1,7 +1,11 @@
-package com.my.mq.storagge.rockdsdb.db;
+package com.my.mq.storage.rockdsdb.db;
 
 import org.rocksdb.*;
 import org.rocksdb.util.SizeUnit;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 class OptionsConfig {
@@ -19,7 +23,7 @@ class OptionsConfig {
 
     static final ColumnFamilyOptions COLUMN_FAMILY_OPTIONS_DEFAULT = new ColumnFamilyOptions();
 
-//    private static final List<CompressionType> COMPRESSION_TYPES = new ArrayList<>();
+    private static final List<CompressionType> COMPRESSION_TYPES = new ArrayList<>();
 
     static {
         DB_OPTIONS
@@ -67,11 +71,11 @@ class OptionsConfig {
         // 资源已经吃光了, top -H 发现有大量的 bg 开头的线程（RocksDB 的 compaction 线程）在运行, 这
         // 个时候可以考虑用 IO 资源换取 CPU 资源，将压缩方式改成"no:no:no:lz4:lz4:zstd:zstd". 总之, 目
         // 的是为了最大限度地利用系统的现有资源, 使性能在现有的资源情况下充分发挥.
-//        COMPRESSION_TYPES.addAll(Arrays.asList(
-//                CompressionType.NO_COMPRESSION, CompressionType.NO_COMPRESSION,
-//                CompressionType.LZ4_COMPRESSION, CompressionType.LZ4_COMPRESSION, CompressionType.LZ4_COMPRESSION,
-//                CompressionType.ZSTD_COMPRESSION, CompressionType.ZSTD_COMPRESSION)
-//        );
+        COMPRESSION_TYPES.addAll(Arrays.asList(
+                CompressionType.NO_COMPRESSION, CompressionType.NO_COMPRESSION,
+                CompressionType.LZ4_COMPRESSION, CompressionType.LZ4_COMPRESSION, CompressionType.LZ4_COMPRESSION,
+                CompressionType.ZSTD_COMPRESSION, CompressionType.ZSTD_COMPRESSION)
+        );
 
         COLUMN_FAMILY_OPTIONS_DEFAULT
                 .setTableFormatConfig(BLOCK_BASED_TABLE_CONFIG)

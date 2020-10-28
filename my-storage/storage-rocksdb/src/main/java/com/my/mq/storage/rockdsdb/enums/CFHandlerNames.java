@@ -1,4 +1,4 @@
-package com.my.mq.storagge.rockdsdb.enums;
+package com.my.mq.storage.rockdsdb.enums;
 
 
 public enum CFHandlerNames {

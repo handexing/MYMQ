@@ -1,5 +1,6 @@
 package com.my.mq.serializer.protostuff;
 
+import com.my.mq.common.spi.SpiMeta;
 import com.my.mq.serializer.Serialization;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
@@ -14,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @description: Protostuff序列化
  * @create 2020-10-14 14:22
  */
+
+@SpiMeta(name = "protostuff")
 public class ProtostuffSerializable implements Serialization {
 
     /**

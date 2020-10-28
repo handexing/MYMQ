@@ -1,25 +1,16 @@
 package com.my.mq.remoting.common;
 
-import com.my.mq.remoting.exception.RemotingConnectException;
-import com.my.mq.remoting.exception.RemotingSendRequestException;
-import com.my.mq.remoting.exception.RemotingTimeoutException;
-import com.my.mq.remoting.protocol.RemotingCommand;
 import io.netty.channel.Channel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 
 public class RemotingHelper {
 
     public static final String ROCKETMQ_REMOTING = "RocketmqRemoting";
     public static final String DEFAULT_CHARSET = "UTF-8";
 
-    private static final Logger log = LoggerFactory.getLogger(RemotingUtil.class);
+//    private static final Logger log = LoggerFactory.getLogger(RemotingUtil.class);
     public static String exceptionSimpleDesc(final Throwable e) {
         StringBuffer sb = new StringBuffer();
         if (e != null) {

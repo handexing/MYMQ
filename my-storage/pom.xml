@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <description>用于第三方存储数据，使用spi方式实现。</description>
     <artifactId>my-storage</artifactId>
+    <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
